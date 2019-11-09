@@ -5,7 +5,17 @@
 
 <configuration>
 
+
     <properties resource="db.properties"/>
+
+    <!--查出语句与pojo 自动转驼峰   不知道为啥 这个有顺序必须-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <package name="com.yt.mybatis.entity"/>
+    </typeAliases>
 
     <environments default="development">
         <!--每个sessionFactory对应一个环境-->
@@ -24,5 +34,6 @@
     <mappers>
         <!--直接映射到相应的mapper文件-->
         <mapper resource="sqlmapper/TUserMapper.xml"/>
+        <mapper resource="sqlmapper/TOrderMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,6 +1,6 @@
 package com.yt.mybatis.entity;
 
-public class TUser {
+public class TUser extends BaseEntry{
     private Integer id;
     private String userName;
     private String realName;
@@ -9,6 +9,10 @@ public class TUser {
     private String email;
     private String note;
     private Integer positionId;
+
+
+    public TUser(){
+    }
 
     public Integer getId() {
         return id;

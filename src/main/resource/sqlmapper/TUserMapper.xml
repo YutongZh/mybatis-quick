@@ -4,15 +4,232 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.yt.mybatis.mapper.TUserMapper">
-    <select id="getTUserByPrimaryKey" resultType="com.yt.mybatis.entity.TUser">
-    select id,
+
+
+    <resultMap id="Base_Result_Map" type="com.yt.mybatis.entity.TUser">
+
+<!--        <constructor>-->
+<!--            <idArg column="id" javaType="int"/>-->
+<!--            <arg column="user_name" javaType="String"/>-->
+<!--        </constructor>-->
+
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="position_id" property="positionId" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Sql">
+            id,
             user_name userName,
             real_name realName,
             sex,
             mobile,
             email,
             note,
-            position_id positionId
+            position_id positionId </sql>
+    
+    <select id="getTUserByPrimaryKey" parameterType="Integer" resultType="com.yt.mybatis.entity.TUser">
+        select
+            <include refid="Base_Sql"/>
             from t_user where id = #{id,jdbcType=INTEGER}
   </select>
+    
+    <select id="getTUser1" resultType="com.yt.mybatis.entity.TUser">
+        select
+            <include refid="Base_Sql"/>
+            from t_user where id = #{id,jdbcType=INTEGER} and user_name = #{userName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getTUser2" parameterType="com.yt.mybatis.entity.TUser" resultType="com.yt.mybatis.entity.TUser">
+        select
+            <include refid="Base_Sql"/>
+            from t_user where id = #{id,jdbcType=INTEGER} and user_name = #{userName,jdbcType=VARCHAR}
+            and sex = #{sex,jdbcType=INTEGER}
+    </select>
+
+    <select id="getTUser3" parameterType="com.yt.mybatis.entity.TUser" resultMap="Base_Result_Map">
+        select
+            <include refid="Base_Sql"/>
+            from t_user where id = #{id,jdbcType=INTEGER} and user_name = #{userName,jdbcType=VARCHAR}
+            and sex = #{sex,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertTUser4" parameterType="com.yt.mybatis.entity.TUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user (id,user_name,real_name,
+            sex,mobile,email,note,position_id)
+            values
+            (#{id, jdbcType=INTEGER}, #{userName, jdbcType=VARCHAR}, #{realName, jdbcType=VARCHAR},
+            #{sex, jdbcType=INTEGER}, #{mobile, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR},
+            #{note,jdbcType=VARCHAR}, #{positionId, jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertTUser5" parameterType="com.yt.mybatis.entity.TUser">
+        <selectKey keyProperty="id" order="AFTER" resultType="int"> select last_insert_id() </selectKey>
+        insert into t_user (id,user_name,real_name,
+            sex,mobile,email,note,position_id)
+            values
+            (#{id, jdbcType=INTEGER}, #{userName, jdbcType=VARCHAR}, #{realName, jdbcType=VARCHAR},
+            #{sex, jdbcType=INTEGER}, #{mobile, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR},
+            #{note,jdbcType=VARCHAR}, #{positionId, jdbcType=INTEGER})
+    </insert>
+
+    <select id="queryByWhere" resultMap="Base_Result_Map">
+        SELECT
+            <include refid="Base_Sql"/>
+            from t_user
+            <where>
+                <if test="userName != null and userName != ''" >
+                    and user_name = #{userName,jdbcType=VARCHAR}
+                </if>
+                <if test="sex != null and sex != ''">
+                    and sex = #{sex,jdbcType=INTEGER}
+                </if>
+                <if test="id != null and id != ''">
+                    and id = #{id,jdbcType=INTEGER}
+                </if>
+            </where>
+    </select>
+
+    <update id="updateBySet">
+        update t_user
+        <set>
+            <if test="userName != null">
+                user_name=#{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email=#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="positionId != null">
+                position_Id= #{positionId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where
+            id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertByTrim" parameterType="TUser">
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="note != null">
+                note,
+            </if>
+            <if test="positionId != null">
+                position_id,
+            </if>
+        </trim>
+
+        <trim  prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="positionId != null">
+                #{positionId,jdbcType=INTEGER},
+            </if>
+        </trim>
+
+    </insert>
+
+
+    <select id="selectByForEach" parameterType="java.util.Arrays" resultMap="Base_Result_Map">
+        select
+            <include refid="Base_Sql"/>
+            from t_user
+            where user_name in
+            <foreach collection="array" open="(" close=")" item="jiera" index="i" separator=",">
+                #{jiera}
+            </foreach>
+    </select>
+
+    <select id="selectByForEachList" parameterType="java.util.List" resultMap="Base_Result_Map">
+        select
+            <include refid="Base_Sql"/>
+            from t_user
+            where id in
+            <foreach collection="list" open="(" close=")" index="i" separator="," item="id">
+                #{id}
+            </foreach>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into t_user
+        (
+        id,
+        email,
+        user_name,
+        sex,
+        mobile,
+        real_name,
+        note,
+        position_id
+        )
+        values
+         <foreach collection="list" separator="," item="user" index="i">
+             <trim  prefix="(" suffix=")" suffixOverrides=",">
+                 <if test="user.id != null">
+                     #{user.id,jdbcType=INTEGER},
+                 </if>
+                 <if test="user.email != null">
+                     #{user.email,jdbcType=VARCHAR},
+                 </if>
+                 <if test="user.userName != null">
+                     #{user.userName,jdbcType=VARCHAR},
+                 </if>
+                 <if test="user.sex != null">
+                     #{user.sex,jdbcType=INTEGER},
+                 </if>
+                 <if test="user.mobile != null">
+                     #{user.mobile,jdbcType=VARCHAR},
+                 </if>
+                 <if test="user.realName != null">
+                     #{user.realName,jdbcType=VARCHAR},
+                 </if>
+                 <if test="user.note != null">
+                     #{user.note,jdbcType=VARCHAR},
+                 </if>
+                 <if test="user.positionId != null">
+                     #{user.positionId,jdbcType=INTEGER},
+                 </if>
+             </trim>
+         </foreach>
+    </insert>
 </mapper>
