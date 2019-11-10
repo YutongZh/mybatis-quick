@@ -189,6 +189,22 @@
                 #{id}
             </foreach>
     </select>
+    <select id="selectByChoose" resultType="TUser" resultMap="Base_Result_Map">
+        select
+            <include refid="Base_Sql" />
+        from t_user where
+        <choose>
+            <when test="sex != null and realName != null">
+                sex = #{sex, jdbcType=INTEGER} and real_name=#{realName,jdbcType=VARCHAR}
+            </when>
+            <when test="userName != null">
+                user_name = #{userName, jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                1==1
+            </otherwise>
+        </choose>
+    </select>
 
     <insert id="batchInsert" parameterType="java.util.List">
         insert into t_user

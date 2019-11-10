@@ -133,6 +133,7 @@ public class MybatisQuickStart {
         System.out.println(tUser);
     }
 
+    //update set语句
     @Test
     public void updateBySet(){
         //默认自动提交事务
@@ -187,6 +188,23 @@ public class MybatisQuickStart {
         list.add(2);
         List<TUser> tUsers = mapper.selectByForEachList(list);
         System.out.println(tUsers);
+    }
+
+    // choose when  需求：优先通过性别 和 真实名称去查，字段有一个不存在则再通过姓名查
+    @Test
+    public void selectByChoose(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        TUserMapper tUserMapper = sqlSession.getMapper(TUserMapper.class);
+        TUser tUser = new TUser();
+        tUser.setSex(2);
+
+
+        tUser.setUserName("zyt");
+        TUser tUser1 = tUserMapper.selectByChoose(tUser);
+
+        System.out.println(tUser1);
+
+
     }
 
     //动态批量插入1 动态拼装sql

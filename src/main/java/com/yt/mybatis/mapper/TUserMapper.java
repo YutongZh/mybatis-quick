@@ -30,4 +30,6 @@ public interface TUserMapper {
     List<TUser> selectByForEachList(List<Integer> ids);
 
     Integer batchInsert(List<TUser> userList);
+
+    TUser selectByChoose(TUser tUser);
 }
