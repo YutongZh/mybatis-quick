@@ -17,6 +17,12 @@
         <package name="com.yt.mybatis.entity"/>
     </typeAliases>
 
+    <plugins>
+        <plugin interceptor="com.yt.mybatis.MybatisPluginIntercept">
+            <property name="threshold" value="10"/>
+        </plugin>
+    </plugins>
+
     <environments default="development">
         <!--每个sessionFactory对应一个环境-->
         <environment id="development">
@@ -29,7 +35,7 @@
             </dataSource>
         </environment>
     </environments>
-
+    
     <!--映射文件 mapper的配置文件-->
     <mappers>
         <!--直接映射到相应的mapper文件-->
